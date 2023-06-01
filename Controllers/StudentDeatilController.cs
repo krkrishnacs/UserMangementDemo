@@ -27,19 +27,25 @@ namespace EuphoriaInfotech.Controllers
 
 
         [HttpPost]
-        public ActionResult StudentDeatil(StudentDetailsVM studentDetailsVM,HttpPostedFileBase Photo)
+        public ActionResult StudentDeatil(StudentDetailsVM studentDetailsVM, HttpPostedFileBase Photo)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    StudentDetailRepo studentDetailRepo=new StudentDetailRepo();
+                    StudentDetailRepo studentDetailRepo = new StudentDetailRepo();
+                    string fileName = string.Empty;
+                    if (Photo != null && Photo.ContentLength > 0)
+                    {
+                        fileName = Path.GetFileName(Photo.FileName);
+                        studentDetailsVM.Photo = fileName;
+                    }
 
                     if (studentDetailRepo.AddStudent(studentDetailsVM))
                     {
                         if (Photo != null && Photo.ContentLength > 0)
                         {
-                            string fileName = Path.GetFileName(Photo.FileName);
+                            studentDetailsVM.Photo = fileName;
                             string path = Server.MapPath("~/Uploads/" + Photo);
                             string fullpath = Path.Combine(fileName, path);
                             Photo.SaveAs(fullpath);
@@ -48,13 +54,13 @@ namespace EuphoriaInfotech.Controllers
                             //Photo.SaveAs(path);
                             //studentDetailsVM.Photo = fileName;
                             //studentDetailRepo.AddStudent(studentDetailsVM);
-                            if (studentDetailRepo!=null)
+                            if (studentDetailRepo != null)
                             {
                                 return RedirectToAction(nameof(StudentAllRecod));
                             }
                         }
-                          
-                      
+
+
                         ViewBag.Message = " Student Recod  Added successfully";
                         ModelState.Clear();
                     }
@@ -72,21 +78,21 @@ namespace EuphoriaInfotech.Controllers
         [HttpGet]
         public ActionResult StudentAllRecod()
         {
-            
-                DataTable dt = new DataTable();
-                string SqlCon = ConfigurationManager.ConnectionStrings["EuphoriaDB"].ConnectionString;
-                using (SqlConnection cn = new SqlConnection(SqlCon))
+
+            DataTable dt = new DataTable();
+            string SqlCon = ConfigurationManager.ConnectionStrings["EuphoriaDB"].ConnectionString;
+            using (SqlConnection cn = new SqlConnection(SqlCon))
+            {
+                using (SqlCommand cmd = new SqlCommand($"select * from StudenDetails"))
                 {
-                    using (SqlCommand cmd = new SqlCommand($"select * from StudenDetails"))
+                    cmd.Connection = cn;
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
-                        cmd.Connection = cn;
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            da.Fill(dt);
-                        }
+                        da.Fill(dt);
                     }
                 }
-                return View(dt);
+            }
+            return View(dt);
         }
 
     }
