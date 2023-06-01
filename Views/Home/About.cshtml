@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+
+    <p>Use this area to provide additional information.</p>
+</main>
+<div class="form-group">
+    <div class="col-md-10">
+        <input type="text" id="txt1" name="txt1" placeholder="Enter First Value!"/>
+        </div>
+    </div>
+<br/>
+<div class="form-group">
+    <div class="col-md-10">
+        <input type="text" id="txt2" name="txt2" placeholder="Enter Second Value!" />
+    </div>
+</div>
+<br/>
+<div class="form-group">
+    <div class="col-md-10">
+        <input type="text" id="txt3" name="txt3" placeholder="Total Value!" readonly />
+    </div>
+</div>
+<br/>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Add" class="btn btn-success" onclick="Add();"/>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+    debugger;
+    function Add() {
+        var a = parseInt($("#txt1").val());
+        var b = parseInt($("#txt1").val());
+        var c = a + b;
+        //$("#txt3").html(c)
+        alert(c);
+    }
+    
+</script>

@@ -1,0 +1,51 @@
+﻿@using System.Data
+@model DataTable
+@{
+    ViewBag.Title = "StudentAllRecod";
+}
+
+<h2>Student All Recod</h2>
+<table cellpadding="5" cellspacing="5" border="1">
+    <tr style="background-color:aliceblue">
+
+
+        <th>Id</th>
+        <th>StudentName</th>
+        <th>SchoolName</th>
+        <th>Degree</th>
+        <th>DateOfBirth</th>
+        <th>FatherName</th>
+        <th>MotherName</th>
+        <th>StudentAddress</th>
+        <th>Gender</th>
+        <th>StudentEmail</th>
+        <th>StudentPhoneNo</th>
+        <th>ParentsPhoneNo</th>
+        <th>Photo</th>
+
+    </tr>
+    @foreach (DataRow dr in Model.Rows)
+    {
+        <tr>
+            <td>@dr["Id"]</td>
+            <td>@dr["StudentName"]</td>
+            <td>@dr["SchoolName"]</td>
+            <td>@dr["Degree"]</td>
+            <td>@dr["DateOfBirth"]</td>
+            <td>@dr["FatherName"]</td>
+            <td>@dr["MotherName"]</td>
+            <td>@dr["StudentAddress"]</td>
+            <td>@dr["Gender"]</td>
+            <td>@dr["StudentEmail"]</td>
+            <td>@dr["StudentPhoneNo"]</td>
+            <td>@dr["ParentsPhoneNo"]</td>
+            <td>@dr["Photo"]</td>
+
+        </tr>
+
+    }
+
+</table>
+<div>
+    @Html.ActionLink("Add Student Deatil", "StudentDeatil")
+</div>

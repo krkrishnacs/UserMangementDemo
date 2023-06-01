@@ -1,0 +1,174 @@
+﻿@model EuphoriaInfotech.Models.UserRegistration
+
+@{
+    ViewBag.Title = "Register";
+}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4 style="color:red;">User Registration</h4>
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the Name" } })
+                @*<i class="fa fa-user" aria-hidden="true"></i>*@
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                <span id="NameError" style="color: red"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the Address" } })
+                @*<i class="fa fa-address-card" aria-hidden="true"></i>*@
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                <span id="Address" style="color: red"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", PlaceHolder = "Enter The User Name" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", PlaceHolder = "Enter the password", onkeyup = "checkPasswordStrength();" } })
+                @*<i class="fa fa-key" style="font-size:36px"></i>*@
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                <div id="password-strength-status"></div>
+
+            </div>
+        </div>
+        @*<div class="form-group">
+                @Html.DropDownList("RoleName",
+                                new SelectList(Enum.GetValues(typeof(EuphoriaInfotech.Models.Role))),
+                                "Select Role",
+                                new { @class = "form-control" })
+            </div>*@
+        <br />
+        <div class="form-group">
+            <select class="form-control" id="RoleName" name="RoleName">
+                <option>Select Role</option>
+                <option value="User" name="User" selected>User</option>
+                <option value="Admin" name="Admin">Admin</option>
+            </select>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10" style="color:green">
+            @ViewBag.Message
+
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Login", "Login")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<form id="registerform">
+    <table id="tblRegister">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>UserName</th>
+                <th>Password</th>
+                <th>RoleName</th>
+            </tr>
+        </thead>
+
+    </table>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<script type="text/javascript">
+
+    $(document).ready(function () {
+         debugger;
+        $.ajax({
+            url: 'Account/GetAllDetails',
+            method: 'get',
+            datatype: 'json',
+            sucess: function (data) {
+                $('#tblRegister').DataTable({
+                    data: data,
+                    columns: [
+                        { "data": "Id", "title": "Id" },
+                        { "data": "Name", "title": "Name" },
+                        { "data": "Address", "title": "Address" },
+                        { "data": "UserName", "title": "UserName" },
+                        { "data": "Password", "title": "Password" },
+                        { "data": "RoleName", "title": "RoleName" }
+                    ]
+                });
+            }
+        });
+
+    });
+
+    $(function () {
+        $("#Name").keypress(function (e) {
+            var keyCode = e.keyCode || e.which;
+            $("#NameError").html("");
+            //Regex for Valid Characters i.e. Alphabets.
+            var regex = /^[A-Za-z]+$/;
+
+            //Validate TextBox value against the Regex.
+            var isValid = regex.test(String.fromCharCode(keyCode));
+            if (!isValid) {
+                $("#NameError").html("Only Alphabets allowed for the Name!.");
+            }
+
+            return isValid;
+            //if ($('#Name').val() == '') {
+            //    alert('Please Enter The Name');
+            //}
+            //else {
+            //    return true;
+            //}
+        });
+
+    });
+
+    $('#textName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+        else {
+            e.preventDefault();
+            alert('Please Enter Alphabate');
+            return false;
+        }
+    });
+    //****Data Table Showing****//
+
+
+
+</script>

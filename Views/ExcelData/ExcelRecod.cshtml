@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "ExcelRecod";
+}
+
+<h2>Excel Recod</h2>
+<body>
+    @using (Html.BeginForm("ExcelRecod", "ExcelData", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input type="file" name="postedFile" />
+        <input type="submit" value="Import" />
+    }
+</body>
